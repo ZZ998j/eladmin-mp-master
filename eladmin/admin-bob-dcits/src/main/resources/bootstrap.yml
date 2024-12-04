@@ -1,0 +1,88 @@
+server:
+  port: 8000
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+
+spring:
+#  config:
+#    import: nacos
+  application:
+    name: smartBJ
+  freemarker:
+    check-template-location: false
+  profiles:
+    # 激活的环境，如果需要 quartz 分布式支持，需要修改 active: dev,quartz
+    active: dev
+  data:
+    redis:
+      repositories:
+        enabled: false
+#  pid:
+#    file: /自行指定位置/eladmin.pid
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        group: DEFAULT_GROUP
+      config:
+        server-addr: 127.0.0.1:8848
+        group: DEFAULT_GROUP
+        file-extension: yml
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+    sentinel:
+      web-context-unify: false
+      transport:
+        dashboard: 1
+        clientIp: 127.0.0.1:8666
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev2
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        group: DEFAULT_GROUP
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yml
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+
+
+
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 127.0.0.1:8848
+#        discovery:
+#          username: nacos
+#          password: nacos
+#          namespace: smart_dev
+#        server-addr: 127.0.0.1:8848
+#        service-enabled:
+#          enabled: true
+#        tenantId: 66560bcb-898e-4584-8ee4-3a5625fe345c
+#        group: DEFAULT_GROUP
+#        namespace: smart_dev
+#      config:
+#        server-addr: 127.0.0.1:8848
+#        namespace: smart_dev
+#        import-check:
+#          enabled: true
+#        file-extension: yml
+#        shared-config:
+#          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+
+
